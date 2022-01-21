@@ -1,0 +1,39 @@
+.votehero{
+  overflow-y: scroll;
+  height: 350px;
+  width: inherit;
+}
+
+.voteherosearch{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.herosearch{
+  height: 48px;
+  padding-bottom: 16px;
+  width: 75%;
+  margin-left: 32px;
+  font-size: 40px;
+}
+
+.heroIcon{
+  height: 100px;
+  width: 100px;
+  margin-right: 20px;
+}
+
+.heroVoteEntryClickable{
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  align-items: center;
+}
+
+.heroVoteEntry{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
