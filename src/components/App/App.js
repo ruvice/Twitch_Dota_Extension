@@ -19,17 +19,21 @@ export default class App extends React.Component{
             event: null,
             voteEvent: null,
             isEventTab: true,
-            streamerId: 123702490
+            streamerId: 123702490,
+            channelId: 123,
+            tooltipString: null,
+            latency: null,
         }
         this.toggleTab = this.toggleTab.bind(this)
     }
 
     contextUpdate(context, delta){
         if(delta.includes('theme')){
-            this.setState(()=>{
-                return {theme:context.theme}
-            })
+            this.setState({ theme:context.theme })
         }
+        // if (delta.includes('hlsLatencyBroadcaster')){
+        //     this.setState({ latency: JSON.stringify(context), latency: JSON.stringify(delta) })
+        // }
     }
 
     visibilityChanged(isVisible){
@@ -70,16 +74,28 @@ export default class App extends React.Component{
                     // if the component hasn't finished loading (as in we've not set up after getting a token), let's set it up now.
                     // Look into initiating streamer session on backend
                     // now we've done the setup for the component, let's set the state to true to force a rerender with the correct data.
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ channelId: `${auth.channelId}` })
+                    };
+                    fetch(`https://twitch-dota-extension-backend.herokuapp.com/init/${this.state.streamerId}`, requestOptions)
+                        .then(response => response.json())
                     this.setState(()=>{
-                        return {finishedLoading:true}
+                        return {
+                            finishedLoading: true,
+                            channelId: auth.channelId
+                        }
                     })
                 }
             })
 
+
             this.twitch.listen('broadcast',(target,contentType,body)=>{
                 this.twitch.rig.log(`New PubSub message!\n${target}\n${contentType}\n${body}`)
                 // now that you've got a listener, do something with the result... 
-
+                const { tooltipString } = JSON.parse(body)
+                setTimeout(() => this.setState({tooltipString: tooltipString}), Math.round(this.state.latency*1000))
                 // do something...
 
             })
@@ -88,8 +104,14 @@ export default class App extends React.Component{
                 this.visibilityChanged(isVisible)
             })
 
-            this.twitch.onContext((context,delta)=>{
-                this.contextUpdate(context,delta)
+            // this.twitch.onContext((context,delta)=>{
+            //     this.contextUpdate(context,delta)
+            //     this.setState({ latency: context.hlsLatencyBroadcaster, context: delta.hlsLatencyBroadcaster })
+            // })
+            this.twitch.onContext((context, contextFields) => {
+                if (context != undefined && context.hlsLatencyBroadcaster != undefined) {
+                    this.setState({ latency: context.hlsLatencyBroadcaster })
+                }
             })
         }
 
@@ -124,8 +146,9 @@ export default class App extends React.Component{
                 <div className="App">
                     <div className={this.state.theme === 'light' ? 'App-light' : 'App-dark'} >
                         <Navbar toggleTab={this.toggleTab}/>
-                        {this.state.isEventTab ? <Tooltip event={this.state.event} streamerId={this.state.streamerId} /> 
+                        {this.state.isEventTab ? <Tooltip tooltipString={this.state.tooltipString} /> 
                             : <Vote event={this.state.voteEvent} streamerId={this.state.streamerId}/>}
+                        {/* <p>{this.state.latency}</p> */}
                     </div>
                 </div>
             )
@@ -134,7 +157,7 @@ export default class App extends React.Component{
                 <div className="App">
                     {/* <div className={this.state.theme === 'light' ? 'App-light' : 'App-dark'} > */}
                     <Navbar toggleTab={this.toggleTab}/>
-                    {this.state.isEventTab ? <Tooltip event={this.state.event} streamerId={this.state.streamerId} /> 
+                    {this.state.isEventTab ? <Tooltip tooltipString={this.state.tooltipString} /> 
                         : <Vote event={this.state.voteEvent} streamerId={this.state.streamerId}/>}
                 </div>
             )
