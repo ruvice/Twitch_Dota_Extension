@@ -143,23 +143,33 @@ export default class App extends React.Component{
     render(){
         if(this.state.finishedLoading && this.state.isVisible){
             return (
-                <div className="App">
-                    <div className={this.state.theme === 'light' ? 'App-light' : 'App-dark'} >
-                        <Navbar toggleTab={this.toggleTab}/>
-                        {this.state.isEventTab ? <Tooltip tooltipString={this.state.tooltipString} /> 
-                            : <Vote event={this.state.voteEvent} streamerId={this.state.streamerId}/>}
-                        {/* <p>{this.state.latency}</p> */}
+                <>
+                    <head>
+                        <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
+                    </head>
+                    <div className="App">
+                        <div className={this.state.theme === 'light' ? 'App-light' : 'App-dark'} >
+                            <Navbar toggleTab={this.toggleTab}/>
+                            {this.state.isEventTab ? <Tooltip tooltipString={this.state.tooltipString} /> 
+                                : <Vote event={this.state.voteEvent} streamerId={this.state.streamerId}/>}
+                            {/* <p>{this.state.latency}</p> */}
+                        </div>
                     </div>
-                </div>
+                </>
             )
         }else{
             return (
-                <div className="App">
-                    {/* <div className={this.state.theme === 'light' ? 'App-light' : 'App-dark'} > */}
-                    <Navbar toggleTab={this.toggleTab}/>
-                    {this.state.isEventTab ? <Tooltip tooltipString={this.state.tooltipString} /> 
-                        : <Vote event={this.state.voteEvent} streamerId={this.state.streamerId}/>}
-                </div>
+                <>
+                    <head>
+                        <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>
+                    </head>
+                    <div className="App">
+                        {/* <div className={this.state.theme === 'light' ? 'App-light' : 'App-dark'} > */}
+                        <Navbar toggleTab={this.toggleTab}/>
+                        {this.state.isEventTab ? <Tooltip tooltipString={this.state.tooltipString} /> 
+                            : <Vote event={this.state.voteEvent} streamerId={this.state.streamerId}/>}
+                    </div>
+                </>
             )
         }
 
