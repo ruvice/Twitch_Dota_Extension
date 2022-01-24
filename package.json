@@ -42,9 +42,6 @@
   "dependencies": {
     "@apollo/client": "^3.4.17",
     "@babel/runtime": "^7.16.3",
-    "@hitagi/core": "^0.4.50",
-    "@hitagi/dota": "^0.5.53",
-    "@hitagi/utils": "^0.3.17",
     "core-js": "^3.5.0",
     "cors": "^2.8.5",
     "dota2-gsi": "^1.0.2",

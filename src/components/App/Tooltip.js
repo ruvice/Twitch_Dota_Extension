@@ -1,6 +1,4 @@
 import React from 'react'
-import { HERO_ID_MAPPING } from './helper'
-import TooltipQuery from './TooltipQuery'
 
 const Tooltip = (props) => {
   const { tooltipString } = props
